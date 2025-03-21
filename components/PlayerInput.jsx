@@ -1,9 +1,6 @@
 import React from 'react';
 
-<<<<<<< HEAD
 {/*Creates the text field containing the player's name */}
-=======
->>>>>>> 65d1113a13fbd14691393881e8fe31191be320dc
 const PlayerInput = ({ playerName, setPlayerName }) => {
   return (
     <div className="mb-6">
