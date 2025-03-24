@@ -1,58 +1,54 @@
 import React, {useState, useEffect} from "react";
-import { fetchPlayerTeam } from '../utils/api'; // Import the API function
+import {fetchPlayerTeam} from '../pages/api/api';
 
 const PlayerInfo = ({playerName, numGames, selectedStat, lineValue}) => {
-    const [teamName, setTeamName] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+  const [teamName, setTeamName] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    useEffect(() => {
-        let isMounted = true; // Track if the component is mounted
+  useEffect(() => {
+    let isMounted = true; // Track if the component is mounted
 
-        const fetchData = async () => {
-          try {
-            // Fetch player game logs
-            console.log('Fetching team for player:', playerName);
-            const team = await fetchPlayerTeam(playerName);
+    const fetchData = async () => {
+      try {
+        const team = await fetchPlayerTeam(playerName);
+        // Only update state if the component is still mounted  
+        if (isMounted) {
+          setTeamName(team);
+          setLoading(false);
+          setError(null);
+        }
+      } catch (err) {
+        // Only update state if the component is still mounted
+        if (isMounted) {
+          setError(err.message);
+          setLoading(false);
+        }
+      } 
+    };
 
-            // Only update state if the component is still mounted
-            if (isMounted) {
-              console.log('Team name received:', team);
-              setTeamName(team);
-              setLoading(false);
-            }
-          } catch (err) {
-            console.error('Error in fetchData:', err);
-            // Only update state if the component is still mounted
-            if (isMounted) {
-              setError(err.message);
-              setLoading(false);
-            }
-          } 
-        };
-    
-        fetchData();
+    fetchData();
 
-        // Cleanup function to cancel the request or ignore the result
-        return () => {
-          isMounted = false;
-        };
-      }, [playerName]);
+    // Cleanup function to cancel the request or ignore the result
+    return () => {
+      isMounted = false;
+    };
+  }, [playerName]);
       
-      if (loading) {
-        return (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-xl font-bold">Loading...</p>
-          </div>
-        );
-      }
-      if (error) {
-        return (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-xl font-bold">Error: {error}</p>
-          </div>
-        );
-      }
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <p className="text-xl font-bold">Loading...</p>
+      </div>
+     );
+   }
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <p className="text-xl font-bold">Error: {error}</p>
+      </div>
+    );
+  }
       
   return (
     <div className="mt-6 flex items-center justify-center">

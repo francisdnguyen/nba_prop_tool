@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchPlayerResults } from '../utils/api'; // Import the API function
+import { fetchPlayerGameLogs } from '../pages/api/api';
 
 import { BarChart, Bar, XAxis, YAxis, ReferenceLine, Cell, LabelList} from 'recharts';
 
@@ -14,11 +14,12 @@ const Results = ({ playerName, selectedStat, numGames, lineValue }) => {
     const fetchData = async () => {
       try {
         console.log('Fetching player results...');
-        const logs = await fetchPlayerResults(playerName, selectedStat, numGames);
+        const logs = await fetchPlayerGameLogs(playerName, selectedStat, numGames);
         // Only update state if the component is still mounted
         if (isMounted) {
           setGameLogs(logs);
           setLoading(false);
+          setError(null);
         }
       } catch (err) {
         console.error('Error fetching player results:', err);
@@ -34,8 +35,8 @@ const Results = ({ playerName, selectedStat, numGames, lineValue }) => {
 
     // Cleanup function to cancel the request or ignore the result
     return () => {
-        isMounted = false;
-      };
+      isMounted = false;
+    };
   }, [playerName, selectedStat, numGames]);
 
   if (loading) {

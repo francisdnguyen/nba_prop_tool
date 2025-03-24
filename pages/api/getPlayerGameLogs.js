@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+
 export default async function handler(req, res) {
   const { PlayerID, LastNGames, Season, SeasonType } = req.query;
 
@@ -30,4 +31,4 @@ export default async function handler(req, res) {
       res.status(500).json({ error: 'Failed to fetch player game logs' });
     }
   }
-}
+}   

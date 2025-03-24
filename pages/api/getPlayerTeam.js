@@ -3,8 +3,11 @@ import axios from 'axios';
 export default async function handler(req, res) {
   const { PlayerID } = req.query;
 
+  if (!PlayerID) {
+    return res.status(400).json({ error: 'PlayerID is required' });
+  } 
+  
   try {
-    // Fetch player details from the NBA API
     const response = await axios.get('https://stats.nba.com/stats/commonplayerinfo', {
       params: {
         PlayerID: PlayerID,
@@ -19,12 +22,7 @@ export default async function handler(req, res) {
 
     res.status(200).json(response.data);
   } catch (error) {
-    console.error('Error fetching player details:', error);
-
-    if (error.code === 'ECONNRESET') {
-        res.status(500).json({ error: 'Connection to the NBA API was reset. Please try again.' });
-      } else {
-        res.status(500).json({ error: 'Failed to fetch player details' });
-      }
+    console.error('Error fetching NBA data:', error);
+    res.status(500).json({ error: 'Failed to fetch NBA data' });
   }
 }
