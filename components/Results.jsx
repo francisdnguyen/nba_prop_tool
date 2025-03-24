@@ -8,6 +8,17 @@ const Results = ({ playerName, selectedStat, numGames, lineValue }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Counters for hit rate
+  const [greenCount, setGreenCount] = useState(0);
+  const [redCount, setRedCount] = useState(0);
+
+  const calculateHitRate = () => {
+    const total = greenCount + redCount;
+    if (total === 0) return 0;
+    return ((greenCount / total) * 100).toFixed(2);
+  };
+  const hitRate = calculateHitRate();
+
   useEffect(() => {
     let isMounted = true; // Track if the component is mounted
 
@@ -18,6 +29,21 @@ const Results = ({ playerName, selectedStat, numGames, lineValue }) => {
         // Only update state if the component is still mounted
         if (isMounted) {
           setGameLogs(logs);
+
+          // Calculate greenCount and redCount
+          let green = 0;
+          let red = 0;
+          logs.forEach((entry) => {
+            if (entry[selectedStat] >= lineValue) {
+              green++;
+            } else {
+              red++;
+            }
+          });
+
+          setGreenCount(green);
+          setRedCount(red);
+
           setLoading(false);
           setError(null);
         }
@@ -81,12 +107,15 @@ const Results = ({ playerName, selectedStat, numGames, lineValue }) => {
         <XAxis dataKey="label" stroke='white' tick={<CustomTick />} height={60} />
         <YAxis stroke='white'/>
         <Bar dataKey={selectedStat}>
-            {gameLogs.map((entry, index) => (
+            {gameLogs.map((entry, index) => {
+              const isGreen = entry[selectedStat] >= lineValue;
+              return (
                 <Cell
                     key={`cell-${index}`}
-                    fill={entry[selectedStat] >= lineValue ? '#4CAF50' : '#FF5252'} // Green or Red based on value
+                    fill={isGreen ? '#4CAF50' : '#FF5252'} // Green or Red based on value
                 />
-            ))}
+              );
+              })}
             <LabelList dataKey={selectedStat} position="top" fill="white" />
         </Bar>
         <ReferenceLine
@@ -95,6 +124,12 @@ const Results = ({ playerName, selectedStat, numGames, lineValue }) => {
           strokeWidth={2}
         />
       </BarChart>
+      
+      <div className="mt-6 flex items-center justify-center">
+        <h2 className="text-xl font-bold">
+          Hit Rate: {hitRate} %
+        </h2>
+      </div>
     </div>
   );
 };
