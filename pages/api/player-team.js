@@ -1,8 +1,18 @@
 import NBAWrapper from '../../services/NBAWrapper';
 
 // Create NBAWrapper instance with base URL for server-side requests
-const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : '';
-const nba = new NBAWrapper(baseURL);
+// On Vercel, use the deployment URL, otherwise use localhost for development
+const getBaseURL = () => {
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  if (process.env.NODE_ENV === 'production') {
+    return ''; // Use relative URLs in production if VERCEL_URL is not available
+  }
+  return 'http://localhost:3000';
+};
+
+const nba = new NBAWrapper(getBaseURL());
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -43,6 +53,11 @@ export default async function handler(req, res) {
     res.status(200).json({ teamName });
   } catch (error) {
     console.error('Error fetching player team:', error);
-    res.status(500).json({ error: error.message });
+    console.error('Error stack:', error.stack);
+    console.error('Error message:', error.message);
+    res.status(500).json({ 
+      error: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 }
