@@ -6,14 +6,18 @@ class NBAWrapper {
         this.backendURL = baseURL || 'http://localhost:3000';
         this.headers = {
             'Host': 'stats.nba.com',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
             'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'en-US,en;q=0.5',
+            'Accept-Language': 'en-US,en;q=0.9',
             'Accept-Encoding': 'gzip, deflate, br',
+            'Referer': 'https://www.nba.com/',
+            'Origin': 'https://www.nba.com',
             'x-nba-stats-origin': 'stats',
             'x-nba-stats-token': 'true',
             'Connection': 'keep-alive',
-            'Referer': 'https://stats.nba.com/',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-site',
             'Pragma': 'no-cache',
             'Cache-Control': 'no-cache',
         };
