@@ -1,10 +1,9 @@
 const axios = require('axios');
 
-const BACKEND_URL = 'http://localhost:3000';
-
 class NBAWrapper {
-    constructor() {
+    constructor(baseURL = '') {
         this.baseURL = 'https://stats.nba.com/stats';
+        this.backendURL = baseURL || 'http://localhost:3000';
         this.headers = {    
             'Accept-Language': 'en-US,en;q=0.9',
         };
@@ -14,7 +13,7 @@ class NBAWrapper {
     async getPlayerId(playerName) {
         try {
             console.log("Beginning..");
-            const response = await axios.get('/api/getPlayerInfo');
+            const response = await axios.get(`${this.backendURL}/api/getPlayerInfo`);
             const players = response.data.resultSets[0];
 
             // Dynamically find the index of 'DISPLAY_FIRST_LAST'
@@ -43,11 +42,10 @@ class NBAWrapper {
         }
     }
 
-
     // Get player team by ID 
     async getPlayerTeam(playerId) {
         try {
-            const response = await axios.get(`${BACKEND_URL}/api/getPlayerTeam`, {
+            const response = await axios.get(`${this.backendURL}/api/getPlayerTeam`, {
                 params: {
                     PlayerID: playerId,
                 },
@@ -78,7 +76,7 @@ class NBAWrapper {
     // Get player game logs
     async getPlayerGameLogs({PlayerID, LastNGames, Season, SeasonType}) {
         try {
-            const response = await axios.get(`${BACKEND_URL}/api/getPlayerGameLogs`, {
+            const response = await axios.get(`${this.backendURL}/api/getPlayerGameLogs`, {
                 params: {
                     PlayerID: PlayerID,
                     LastNGames: LastNGames,
@@ -96,17 +94,17 @@ class NBAWrapper {
    
     // Helper function to get the current NBA season
     getCurrentSeason = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth() + 1; // Months are 0-indexed
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = today.getMonth() + 1; // Months are 0-indexed
   
-    // NBA season typically starts in October
-    if (month >= 10) {
-      return `${year}-${(year + 1).toString().slice(-2)}`; // e.g., 2023-24
-    } else {
-      return `${year - 1}-${year.toString().slice(-2)}`; // e.g., 2022-23
-    }
-  };
+        // NBA season typically starts in October
+        if (month >= 10) {
+            return `${year}-${(year + 1).toString().slice(-2)}`; // e.g., 2023-24
+        } else {
+            return `${year - 1}-${year.toString().slice(-2)}`; // e.g., 2022-23
+        }
+    };
 }
 
 export default NBAWrapper;
