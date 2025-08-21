@@ -43,3 +43,43 @@ export const fetchPlayerGameLogs = async (playerName, selectedStat, numGames) =>
     throw error;
   }
 };
+
+// Function to fetch all NBA players for autocomplete
+export const fetchAllPlayers = async () => {
+  try {
+    const response = await fetch('/api/getPlayerInfo');
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to fetch players');
+    }
+
+    const data = await response.json();
+    const players = data.resultSets[0];
+    
+    // Extract player names from the response
+    const headers = players.headers;
+    const playerNameIndex = headers.indexOf('DISPLAY_FIRST_LAST');
+    
+    if (playerNameIndex === -1) {
+      throw new Error('Player name field not found in response');
+    }
+
+    // Get all player names and sort them alphabetically
+    const playerNames = players.rowSet
+      .map(player => player[playerNameIndex])
+      .sort((a, b) => a.localeCompare(b));
+
+    return playerNames;
+  } catch (error) {
+    console.error('Error fetching all players:', error);
+    // Return a fallback list of popular players if API fails
+    return [
+      'LeBron James', 'Stephen Curry', 'Kevin Durant', 'Giannis Antetokounmpo',
+      'Luka Doncic', 'Jayson Tatum', 'Joel Embiid', 'Nikola Jokic',
+      'Damian Lillard', 'Jimmy Butler', 'Kawhi Leonard', 'Paul George',
+      'Anthony Davis', 'Devin Booker', 'Donovan Mitchell', 'Trae Young',
+      'Ja Morant', 'Zion Williamson', 'Anthony Edwards', 'Tyrese Haliburton'
+    ];
+  }
+};
