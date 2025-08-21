@@ -36,8 +36,8 @@ const PlayerInfo = ({playerName, numGames, selectedStat, lineValue}) => {
     return (
       <div className="flex items-center justify-center h-24">
         <div className="flex items-center space-x-3">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-          <p className="text-lg font-semibold text-gray-300">Loading player info...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400"></div>
+          <p className="text-xl font-semibold text-gray-300">Loading player info...</p>
         </div>
       </div>
      );
@@ -47,8 +47,8 @@ const PlayerInfo = ({playerName, numGames, selectedStat, lineValue}) => {
     return (
       <div className="flex items-center justify-center h-24">
         <div className="text-center">
-          <div className="text-red-400 text-2xl mb-2">⚠️</div>
-          <p className="text-lg font-semibold text-red-400">Error: {error}</p>
+          <div className="text-gray-400 text-2xl mb-2">⚠️</div>
+          <p className="text-xl font-semibold text-gray-400">Error: {error}</p>
         </div>
       </div>
     );
@@ -56,17 +56,17 @@ const PlayerInfo = ({playerName, numGames, selectedStat, lineValue}) => {
       
   return (
     <div className="mt-6 text-center">
-      <div className="inline-block bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-blue-500/20 rounded-xl p-6">
-        <h2 className="text-lg font-bold text-white leading-relaxed">
-          <span className="text-blue-400">Team:</span> <span className="text-yellow-400">{teamName}</span>
+      <div className="inline-block bg-gray-700/20 backdrop-blur-sm border border-gray-600/30 rounded-xl p-8">
+        <h2 className="text-xl font-semibold text-gray-200 leading-relaxed">
+          <span className="text-gray-400">Team:</span> <span className="text-white">{teamName}</span>
           <span className="mx-2 text-gray-500">•</span>
-          <span className="text-green-400">{playerName}</span>
+          <span className="text-white">{playerName}</span>
           <span className="mx-2 text-gray-500">•</span>
-          <span className="text-purple-400">Stat:</span> <span className="text-red-400">{selectedStat}</span>
+          <span className="text-gray-400">Stat:</span> <span className="text-white">{selectedStat}</span>
           <span className="mx-2 text-gray-500">•</span>
-          <span className="text-orange-400">Games:</span> <span className="text-cyan-400">{numGames}</span>
+          <span className="text-gray-400">Games:</span> <span className="text-white">{numGames}</span>
           <span className="mx-2 text-gray-500">•</span>
-          <span className="text-pink-400">Line:</span> <span className="text-lime-400">{lineValue}</span>
+          <span className="text-gray-400">Line:</span> <span className="text-white">{lineValue}</span>
         </h2>
       </div>
     </div>

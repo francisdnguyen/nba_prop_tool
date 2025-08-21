@@ -61,8 +61,8 @@ const Results = ({ playerName, selectedStat, numGames, lineValue }) => {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-green-500 mx-auto mb-4"></div>
-          <p className="text-xl font-semibold text-gray-300">Loading game data...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-gray-400 mx-auto mb-4"></div>
+          <p className="text-xl font-medium text-gray-300">Loading game data...</p>
         </div>
       </div>
     );
@@ -72,8 +72,8 @@ const Results = ({ playerName, selectedStat, numGames, lineValue }) => {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
-          <div className="text-red-400 text-4xl mb-4">📊</div>
-          <p className="text-xl font-semibold text-red-400">Error: {error}</p>
+          <div className="text-gray-400 text-4xl mb-4">📊</div>
+          <p className="text-xl font-medium text-gray-400">Error: {error}</p>
         </div>
       </div>
     );
@@ -83,10 +83,10 @@ const Results = ({ playerName, selectedStat, numGames, lineValue }) => {
     const [date, team] = payload.value.split('\n');
     return (
       <g transform={`translate(${x},${y})`}>
-        <text x={0} y={0} dy={16} textAnchor="middle" fill="#d1d5db" fontSize="12">
+        <text x={0} y={0} dy={16} textAnchor="middle" fill="#9ca3af" fontSize="12">
           {date}
         </text>
-        <text x={0} y={0} dy={32} textAnchor="middle" fill="#9ca3af" fontSize="11">
+        <text x={0} y={0} dy={32} textAnchor="middle" fill="#6b7280" fontSize="11">
           {team}
         </text>
       </g>
@@ -95,7 +95,7 @@ const Results = ({ playerName, selectedStat, numGames, lineValue }) => {
 
   return (
     <div className="mt-6">
-      <div className="bg-gradient-to-r from-gray-800/30 to-gray-700/30 backdrop-blur-sm rounded-xl p-6 border border-gray-600/30 overflow-x-auto">
+      <div className="bg-gray-700/20 backdrop-blur-sm rounded-xl p-6 border border-gray-600/30 overflow-x-auto">
         <div className="min-w-[800px]">
           <BarChart
             width={Math.max(800, gameLogs.length * 80)}
@@ -105,13 +105,13 @@ const Results = ({ playerName, selectedStat, numGames, lineValue }) => {
           >
             <XAxis 
               dataKey="label" 
-              stroke='#d1d5db' 
+              stroke='#9ca3af' 
               tick={<CustomTick />} 
               height={80}
               fontSize={12}
               interval={0}
             />
-            <YAxis stroke='#d1d5db' fontSize={12}/>
+            <YAxis stroke='#9ca3af' fontSize={12}/>
             <Bar dataKey={selectedStat} radius={[4, 4, 0, 0]}>
                 {gameLogs.map((entry, index) => {
                   const isGreen = entry[selectedStat] >= lineValue;
@@ -125,14 +125,14 @@ const Results = ({ playerName, selectedStat, numGames, lineValue }) => {
                 <LabelList 
                   dataKey={selectedStat} 
                   position="top" 
-                  fill="white" 
+                  fill="#e5e7eb" 
                   fontSize={12}
                   fontWeight="bold"
                 />
             </Bar>
             <ReferenceLine
               y={lineValue}
-              stroke="#fbbf24"
+              stroke="#f59e0b"
               strokeWidth={3}
               strokeDasharray="5 5"
             />
@@ -141,10 +141,10 @@ const Results = ({ playerName, selectedStat, numGames, lineValue }) => {
       </div>
       
       <div className="mt-8 text-center">
-        <div className="inline-block bg-gradient-to-r from-green-500/10 to-blue-500/10 backdrop-blur-sm border border-green-500/20 rounded-xl p-6">
-          <h2 className="text-2xl font-bold">
+        <div className="inline-block bg-gray-700/20 backdrop-blur-sm border border-gray-600/30 rounded-xl p-6">
+          <h2 className="text-2xl font-medium">
             <span className="text-gray-300">Hit Rate:</span>{' '}
-            <span className={`${parseFloat(hitRate) >= 50 ? 'text-green-400' : 'text-red-400'} text-3xl`}>
+            <span className={`${parseFloat(hitRate) >= 50 ? 'text-green-400' : 'text-red-400'} text-3xl font-semibold`}>
               {hitRate}%
             </span>
           </h2>

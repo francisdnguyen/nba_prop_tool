@@ -216,7 +216,7 @@ const PlayerInput = ({ playerName, setPlayerName }) => {
 
   return (
     <div className="mb-6 relative">
-      <label className="block text-sm mb-3 font-semibold text-gray-200" htmlFor="player-name">
+      <label className="block text-xl mb-3 font-semibold text-gray-200" htmlFor="player-name">
         Enter Player Name
         {loading && (
           <span className="ml-2 text-xs text-blue-400 animate-pulse">

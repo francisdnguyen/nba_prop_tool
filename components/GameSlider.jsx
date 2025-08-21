@@ -3,7 +3,7 @@ import React from 'react';
 const GameSlider = ({ numGames, setNumGames }) => {
   return (
     <div className="mb-6">
-      <label className="block text-sm mb-6 font-semibold text-gray-200" htmlFor="number-of-games">
+      <label className="block text-xl mb-6 font-semibold text-gray-200" htmlFor="number-of-games">
         Number of Games
       </label>
       <div className="relative">
