@@ -1,4 +1,3 @@
-// index.js - Enhanced with modern styling
 import React, {useState} from "react";
 import PlayerInput from '../components/PlayerInput';
 import GameSlider from '../components/GameSlider';
@@ -40,7 +39,7 @@ export default function Home() {
       </div>
       
       <div className="relative z-10 text-white min-h-screen p-6">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-full mx-auto px-4">
           {/* Enhanced Header */}
           <div className="text-center mb-12">
             <h1 className="text-7xl font-semibold mb-6 text-white tracking-wide drop-shadow-lg">
@@ -52,9 +51,9 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Main Content Grid */}
+          {/* Main Content Grid - Wider columns */}
           <div className="grid lg:grid-cols-2 gap-8">
-            {/* Left Column - Controls */}
+            {/* Left Column - Controls (Wider) */}
             <div className="space-y-8">
               <div className="bg-gray-800/40 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50 shadow-xl">
                 <h2 className="text-2xl font-semibold mb-8 text-center text-gray-200">
@@ -80,7 +79,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Column - Results */}
+            {/* Right Column - Results (Wider) */}
             <div className="space-y-8">
               <div className="bg-gray-800/40 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50 shadow-xl">
                 <h2 className="text-2xl font-semibold mb-8 text-center text-gray-200">

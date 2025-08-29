@@ -47,8 +47,17 @@ export default async function handler(req, res) {
     }
 
     console.log('Fetching player results for player ID:', playerId);
-    // Request extra games to account for API inconsistency
-    const requestedGames = Math.min(parseInt(numGames) + 3, 82); // Request 3 extra games as buffer, max 82
+    
+    // Try different strategies to get enough games
+    const targetGames = parseInt(numGames);
+    let gameLogs = [];
+    
+    // Strategy 1: Request significantly more games to account for API limitations
+    const bufferMultiplier = targetGames <= 10 ? 2 : targetGames <= 15 ? 1.5 : 1.3;
+    const requestedGames = Math.min(Math.ceil(targetGames * bufferMultiplier), 82);
+    
+    console.log(`Requesting ${requestedGames} games from API to get ${targetGames} games`);
+    
     const response = await nba.getPlayerGameLogs({
       PlayerID: playerId,
       LastNGames: requestedGames,
@@ -56,7 +65,7 @@ export default async function handler(req, res) {
       SeasonType: 'Regular Season',
     });
 
-    console.log('Player results response:', response);
+    console.log('Player results response received');
 
     const resultSet = response.resultSets[0];
     if (!resultSet.rowSet.length) {
@@ -75,33 +84,77 @@ export default async function handler(req, res) {
       throw new Error('Required fields not found in response');
     }
 
-    // Log the actual data received for debugging
-    console.log(`Requested ${numGames} games, received ${resultSet.rowSet.length} games from API`);
+    console.log(`API returned ${resultSet.rowSet.length} games`);
 
-    // Extract game logs and format them for the chart
-    // Now slice to get exactly the number of games requested
-    const gameLogs = resultSet.rowSet
-      .slice(0, parseInt(numGames)) // Ensure we get exactly numGames
-      .map((game) => {
-        const gameDate = new Date(game[gameDateIndex]);
-        const matchup = game[matchupIndex];
-        const opposingTeam = matchup.includes('vs.') ? matchup.split('vs. ')[1] : matchup.split('@ ')[1];
-        const formattedDate = `${String(gameDate.getMonth() + 1).padStart(2, '0')}/${String(gameDate.getDate()).padStart(2, '0')}`;
+    // Extract and format all available games first
+    const allGameLogs = resultSet.rowSet.map((game) => {
+      const gameDate = new Date(game[gameDateIndex]);
+      const matchup = game[matchupIndex];
+      const opposingTeam = matchup.includes('vs.') ? matchup.split('vs. ')[1] : matchup.split('@ ')[1];
+      const formattedDate = `${String(gameDate.getMonth() + 1).padStart(2, '0')}/${String(gameDate.getDate()).padStart(2, '0')}`;
 
-        return {
-          label: `${formattedDate}\n@${opposingTeam}`,
-          [selectedStat]: game[statIndex],
-        };
+      return {
+        label: `${formattedDate}\n@${opposingTeam}`,
+        [selectedStat]: game[statIndex],
+        gameDate: gameDate, // Keep for potential sorting
+      };
+    });
+
+    // Sort by date (most recent first) to ensure we get the most recent games
+    allGameLogs.sort((a, b) => b.gameDate - a.gameDate);
+
+    // Take exactly what was requested, or all available if less
+    gameLogs = allGameLogs.slice(0, targetGames).map(game => ({
+      label: game.label,
+      [selectedStat]: game[selectedStat]
+    }));
+
+    console.log(`Requested ${targetGames} games, API returned ${resultSet.rowSet.length} games, sending ${gameLogs.length} games`);
+
+    // Strategy 2: If we still don't have enough games, try requesting more
+    if (gameLogs.length < targetGames && requestedGames < 82) {
+      console.log(`Not enough games (${gameLogs.length}/${targetGames}). Trying to request more...`);
+      
+      const secondRequest = Math.min(targetGames * 2, 82);
+      const secondResponse = await nba.getPlayerGameLogs({
+        PlayerID: playerId,
+        LastNGames: secondRequest,
+        Season: nba.getCurrentSeason(),
+        SeasonType: 'Regular Season',
       });
 
-    // Ensure we have enough games, if not throw a descriptive error
-    if (gameLogs.length < parseInt(numGames)) {
-      console.warn(`Only found ${gameLogs.length} games, but ${numGames} were requested`);
-      console.warn('This might be because the player has not played enough recent games');
+      const secondResultSet = secondResponse.resultSets[0];
+      console.log(`Second request returned ${secondResultSet.rowSet.length} games`);
+      
+      if (secondResultSet.rowSet.length > resultSet.rowSet.length) {
+        // Re-process with the larger dataset
+        const newAllGameLogs = secondResultSet.rowSet.map((game) => {
+          const gameDate = new Date(game[gameDateIndex]);
+          const matchup = game[matchupIndex];
+          const opposingTeam = matchup.includes('vs.') ? matchup.split('vs. ')[1] : matchup.split('@ ')[1];
+          const formattedDate = `${String(gameDate.getMonth() + 1).padStart(2, '0')}/${String(gameDate.getDate()).padStart(2, '0')}`;
+
+          return {
+            label: `${formattedDate}\n@${opposingTeam}`,
+            [selectedStat]: game[statIndex],
+            gameDate: gameDate,
+          };
+        });
+
+        newAllGameLogs.sort((a, b) => b.gameDate - a.gameDate);
+        gameLogs = newAllGameLogs.slice(0, targetGames).map(game => ({
+          label: game.label,
+          [selectedStat]: game[selectedStat]
+        }));
+        
+        console.log(`After second request: sending ${gameLogs.length} games`);
+      }
     }
 
-    console.log('Game logs extracted:', gameLogs);
-    console.log(`Final result: ${gameLogs.length} games returned`);
+    if (gameLogs.length < targetGames) {
+      console.warn(`Warning: Only found ${gameLogs.length} games out of ${targetGames} requested. Player may not have played enough recent games.`);
+    }
+
     res.status(200).json({ gameLogs });
   } catch (error) {
     console.error('Error fetching player game logs:', error);
