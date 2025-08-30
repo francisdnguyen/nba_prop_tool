@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from "react";
 import {fetchPlayerTeam} from '../pages/api/api';
+import { useTheme } from './ThemeContext';
 
 const PlayerInfo = ({playerName, numGames, selectedStat, lineValue}) => {
   const [teamName, setTeamName] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { colors } = useTheme();
 
   useEffect(() => {
     let isMounted = true;
@@ -58,15 +60,15 @@ const PlayerInfo = ({playerName, numGames, selectedStat, lineValue}) => {
     <div className="mt-6 text-center">
       <div className="inline-block bg-gray-700/20 backdrop-blur-sm border border-gray-600/30 rounded-xl p-8">
         <h2 className="text-xl font-semibold text-gray-200 leading-relaxed">
-          <span className="text-gray-400">Team:</span> <span className="text-white">{teamName}</span>
+          <span className="text-gray-400">Team:</span> <span className={`${colors.textSecondary}`}>{teamName}</span>
           <span className="mx-2 text-gray-500">•</span>
-          <span className="text-white">{playerName}</span>
+          <span className={`${colors.textSecondary}`}>{playerName}</span>
           <span className="mx-2 text-gray-500">•</span>
-          <span className="text-gray-400">Stat:</span> <span className="text-white">{selectedStat}</span>
+          <span className="text-gray-400">Stat:</span> <span className={`${colors.textSecondary}`}>{selectedStat}</span>
           <span className="mx-2 text-gray-500">•</span>
-          <span className="text-gray-400">Games:</span> <span className="text-white">{numGames}</span>
+          <span className="text-gray-400">Games:</span> <span className={`${colors.textSecondary}`}>{numGames}</span>
           <span className="mx-2 text-gray-500">•</span>
-          <span className="text-gray-400">Line:</span> <span className="text-white">{lineValue}</span>
+          <span className="text-gray-400">Line:</span> <span className={`${colors.textSecondary}`}>{lineValue}</span>
         </h2>
       </div>
     </div>

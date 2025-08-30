@@ -1,15 +1,18 @@
 import React from 'react';
+import { useTheme } from './ThemeContext';
 
 const GameSlider = ({ numGames, setNumGames }) => {
+  const { colors } = useTheme();
+
   return (
     <div className="mb-6">
-      <label className="block text-xl mb-6 font-semibold text-gray-200" htmlFor="number-of-games">
+      <label className={`block text-xl mb-6 font-semibold ${colors.textSecondary}`} htmlFor="number-of-games">
         Number of Games
       </label>
       <div className="relative">
         {/* Current Value Display */}
         <div 
-          className="absolute -top-12 px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 rounded-lg text-sm font-bold shadow-lg transform -translate-x-1/2 transition-all duration-200"
+          className={`absolute -top-12 px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 rounded-lg text-sm font-bold shadow-lg transform -translate-x-1/2 transition-all duration-200 ${colors.textSecondary}`}
           style={{
             left: `calc(${(numGames - 1) * (100 / 19)}% + ${
               numGames <= 4 ? '0.5rem' : 
@@ -36,12 +39,17 @@ const GameSlider = ({ numGames, setNumGames }) => {
             value={numGames}
             onChange={(e) => setNumGames(Number(e.target.value))}
             className="w-full h-3 bg-gradient-to-r from-gray-700 to-gray-600 rounded-lg appearance-none cursor-pointer slider-thumb"
+            style={{
+              background: colors.isDarkMode 
+                ? 'linear-gradient(to right, #374151, #4b5563)'
+                : 'linear-gradient(to right, #d1d5db, #9ca3af)'
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-red-600/20 rounded-lg pointer-events-none" />
         </div>
         
         {/* Min and Max Labels */}
-        <div className="flex justify-between text-sm text-gray-300 mt-3 font-medium">
+        <div className={`flex justify-between text-sm ${colors.textTertiary} mt-3 font-medium`}>
           <span>1</span>
           <span>20</span>
         </div>

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchPlayerGameLogs } from '../pages/api/api';
 import { BarChart, Bar, XAxis, YAxis, ReferenceLine, Cell, LabelList, ResponsiveContainer } from 'recharts';
+import { useTheme } from './ThemeContext';
+
 
 const Results = ({ playerName, selectedStat, numGames, lineValue }) => {
   const [gameLogs, setGameLogs] = useState([]);
@@ -8,6 +10,7 @@ const Results = ({ playerName, selectedStat, numGames, lineValue }) => {
   const [error, setError] = useState(null);
   const [greenCount, setGreenCount] = useState(0);
   const [redCount, setRedCount] = useState(0);
+  const { colors } = useTheme();
 
   const calculateHitRate = () => {
     const total = greenCount + redCount;
@@ -82,7 +85,7 @@ const Results = ({ playerName, selectedStat, numGames, lineValue }) => {
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-gray-400 mx-auto mb-4"></div>
-          <p className="text-xl font-semibold text-gray-300">Loading game data...</p>
+          <p className={`text-xl font-semibold ${colors.textSecondary}`}>Loading game data...</p>
         </div>
       </div>
     );
@@ -93,7 +96,7 @@ const Results = ({ playerName, selectedStat, numGames, lineValue }) => {
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
           <div className="text-gray-400 text-4xl mb-4">📊</div>
-          <p className="text-xl font-semibold text-gray-400">Error: {error}</p>
+          <p className={`text-xl font-semibold ${colors.textSecondary}`}>Error: {error}</p>
         </div>
       </div>
     );
@@ -111,7 +114,7 @@ const Results = ({ playerName, selectedStat, numGames, lineValue }) => {
           y={0} 
           dy={16} 
           textAnchor="middle" 
-          fill="#9ca3af" 
+          fill={`${colors.textSecondary}`}
           fontSize={fontSize}
         >
           {date}
@@ -121,7 +124,7 @@ const Results = ({ playerName, selectedStat, numGames, lineValue }) => {
           y={0} 
           dy={30} 
           textAnchor="middle" 
-          fill="#6b7280" 
+          fill={`${colors.textSecondary}`}
           fontSize={teamFontSize}
         >
           {team}
@@ -204,7 +207,7 @@ const Results = ({ playerName, selectedStat, numGames, lineValue }) => {
       <div className="mt-8 text-center">
         <div className="inline-block bg-gray-700/20 backdrop-blur-sm border border-gray-600/30 rounded-xl p-8">
           <h2 className="text-3xl font-semibold">
-            <span className="text-gray-300">Hit Rate:</span>{' '}
+            <span className={`${colors.textSecondary}`}>Hit Rate:</span>{' '}
             <span className={`${parseFloat(hitRate) >= 50 ? 'text-green-400' : 'text-red-400'} text-4xl font-bold`}>
               {hitRate}%
             </span>

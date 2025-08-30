@@ -1,11 +1,13 @@
 import React from 'react';
+import { useTheme } from './ThemeContext';
 
 const SelectStat = ({ selectedStat, setSelectedStat }) => {
   const stats = ['PTS', 'REB', 'AST', 'STL', 'BLK', 'MIN', 'FG3M'];
+  const { colors } = useTheme();
 
   return (
     <div className="mt-6">
-      <label className="block text-xl mb-3 font-semibold text-gray-200">Select Stat</label>
+      <label className={`block text-xl mb-3 font-semibold ${colors.textSecondary}`}>Select Stat</label>
       <div className="grid grid-cols-4 md:grid-cols-7 gap-2 p-1 bg-gradient-to-r from-gray-800/50 to-gray-700/50 rounded-xl backdrop-blur-sm border border-gray-600/50">
         {stats.map((stat) => (
           <button

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTheme } from './ThemeContext';
 
 // Cache for player list (shared across component instances)
 let playerCache = null;
@@ -11,6 +12,7 @@ const PlayerInput = ({ playerName, setPlayerName }) => {
   const [allPlayers, setAllPlayers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const { colors } = useTheme();
   
   const inputRef = useRef(null);
   const suggestionsRef = useRef(null);
@@ -216,7 +218,7 @@ const PlayerInput = ({ playerName, setPlayerName }) => {
 
   return (
     <div className="mb-6 relative">
-      <label className="block text-xl mb-3 font-semibold text-gray-200" htmlFor="player-name">
+      <label className={`block text-xl mb-3 font-semibold ${colors.textSecondary}`} htmlFor="player-name">
         Enter Player Name
         {loading && (
           <span className="ml-2 text-xs text-blue-400 animate-pulse">
